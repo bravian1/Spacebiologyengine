@@ -4,8 +4,9 @@ import type { FullStudyDetails } from '@/lib/types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, BookOpen, FilePieChart, Users, Quote } from 'lucide-react';
+import { ArrowLeft, BookOpen, FilePieChart, Users, Quote, UserRound } from 'lucide-react';
 import { FileCategoryChart } from './file-category-chart';
+import { PersonnelChart } from './personnel-chart';
 
 interface StudyDetailsProps {
   details: FullStudyDetails;
@@ -15,6 +16,7 @@ interface StudyDetailsProps {
 export function StudyDetails({ details, onBack }: StudyDetailsProps) {
   const { metadata, files, summary } = details;
   const studyInfo = metadata.studies?.[0];
+  const personnel = studyInfo?.people || [];
 
   return (
     <div className="flex flex-col h-full">
@@ -54,6 +56,18 @@ export function StudyDetails({ details, onBack }: StudyDetailsProps) {
                 <p className='text-sm text-muted-foreground'>No file data available for this study.</p>
             )}
           </div>
+
+          {personnel.length > 0 && (
+            <div>
+              <h3 className="flex items-center text-md font-semibold mb-3 font-headline">
+                  <UserRound className="w-5 h-5 mr-2 text-accent"/>
+                  Personnel Roles
+              </h3>
+              <div className='h-72'>
+                  <PersonnelChart personnel={personnel} />
+              </div>
+            </div>
+          )}
           
           {studyInfo?.publications?.length > 0 && (
             <div>
