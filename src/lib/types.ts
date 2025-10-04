@@ -18,6 +18,7 @@ export interface StudySearchResult {
   hits: {
     total: {
       value: number;
+      relation: string;
     };
     hits: {
       _source: Study;

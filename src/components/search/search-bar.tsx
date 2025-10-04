@@ -16,11 +16,15 @@ type FormValues = {
 };
 
 export function SearchBar({ onSearch, isLoading }: SearchBarProps) {
-  const { register, handleSubmit } = useForm<FormValues>();
+  const { register, handleSubmit, watch } = useForm<FormValues>({
+    defaultValues: { searchTerm: '' }
+  });
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     onSearch(data.searchTerm.trim());
   };
+  
+  const searchInput = watch('searchTerm');
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="relative">
@@ -28,10 +32,10 @@ export function SearchBar({ onSearch, isLoading }: SearchBarProps) {
       <Input
         {...register('searchTerm')}
         placeholder="Filter by keyword, organism, or mission name..."
-        className="w-full pl-10"
+        className="w-full pl-10 pr-24"
         disabled={isLoading}
       />
-      <Button type="submit" className="absolute top-1/2 right-2 -translate-y-1/2 h-8 px-4" disabled={isLoading}>
+      <Button type="submit" className="absolute top-1/2 right-2 -translate-y-1/2 h-8 px-4" disabled={isLoading || !searchInput.trim()}>
         Search
       </Button>
     </form>
