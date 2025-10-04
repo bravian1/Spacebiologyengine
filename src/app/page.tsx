@@ -8,6 +8,8 @@ import { Header } from '@/components/layout/header';
 import { DataView } from '@/components/data-display/data-view';
 import { ChatPanel } from '@/components/chat/chat-panel';
 import { useToast } from "@/hooks/use-toast";
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const initialMessages: ChatMessage[] = [
   {
@@ -95,7 +97,16 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen bg-background">
-      <Header />
+      <Header>
+        <div className="flex items-center gap-4 ml-auto">
+            <Button asChild>
+                <Link href="/">Chat</Link>
+            </Button>
+            <Button asChild variant="ghost">
+                <Link href="/search">Search</Link>
+            </Button>
+        </div>
+      </Header>
       <main className="flex-1 grid md:grid-cols-2 gap-6 p-4 lg:p-6 overflow-hidden">
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col overflow-hidden h-full">
           <DataView
