@@ -133,8 +133,8 @@ function ChatPage() {
             </Button>
         </div>
       </Header>
-      <main className="flex-1 grid md:grid-cols-2 gap-6 p-4 lg:p-6 overflow-hidden">
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col overflow-hidden h-full">
+      <main className="flex-1 grid md:grid-cols-5 gap-6 p-4 lg:p-6 overflow-hidden">
+        <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col overflow-hidden h-full md:col-span-3">
           <DataView
             studies={studies}
             selectedStudyAccession={selectedStudyAccession}
@@ -143,7 +143,7 @@ function ChatPage() {
             isLoading={isDetailsLoading}
           />
         </div>
-        <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col overflow-hidden h-full">
+        <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col overflow-hidden h-full md:col-span-2">
           <ChatPanel
             messages={messages}
             onSendMessage={handleSendMessage}
