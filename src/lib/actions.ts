@@ -45,7 +45,7 @@ export async function askQuestion(question: string): Promise<{
 
     if (!searchResponse.ok) {
         const errorText = await searchResponse.text();
-        console.error('NASA API Error:', errorText);
+        console.error('NASA API Error:', errorText, searchResponse.status);
         throw new Error(`Failed to search studies. Status: ${searchResponse.status}`);
     }
 
