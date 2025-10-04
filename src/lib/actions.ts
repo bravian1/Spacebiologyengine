@@ -33,12 +33,14 @@ export async function askQuestion(question: string): Promise<{
       ]
     };
     
-    const searchResponsePromise = fetch(NASA_SEARCH_API, {
-        method: 'POST',
+    // Use GET with query parameter
+    const searchUrl = `${NASA_SEARCH_API}?source_content_type=application/json&source=${encodeURIComponent(JSON.stringify(searchQuery))}`;
+    
+    const searchResponsePromise = fetch(searchUrl, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(searchQuery),
     });
     
     const [insightResult, searchResponse] = await Promise.all([insightPromise, searchResponsePromise]);
@@ -137,17 +139,18 @@ export async function searchStudies(params: {
     };
 
     try {
-        const response = await fetch(NASA_SEARCH_API, {
-            method: 'POST',
+        const searchUrl = `${NASA_SEARCH_API}?source_content_type=application/json&source=${encodeURIComponent(JSON.stringify(query))}`;
+
+        const response = await fetch(searchUrl, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(query),
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error('NASA API Error:', errorText);
+            console.error('NASA API Error:', errorText, response.status, response.statusText);
             throw new Error(`Failed to search studies. Status: ${response.status}`);
         }
 
