@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Telescope, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Telescope, FileText, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 
 import { Header } from '@/components/layout/header';
 import { SearchBar } from '@/components/search/search-bar';
@@ -117,7 +117,7 @@ export default function SearchPage() {
           <div className="p-2 bg-primary/10 rounded-md mt-1">
             <FileText className="w-5 h-5 text-primary" />
           </div>
-          <div>
+          <div className='flex-1'>
             <p className="text-sm font-semibold text-foreground">
               {study['Study Title']}
             </p>
@@ -133,6 +133,12 @@ export default function SearchPage() {
                 </p>
             )}
           </div>
+          <Button asChild variant="secondary" size="sm">
+            <Link href={`/?study=${study.Accession}`}>
+                <Download className="mr-2 h-4 w-4" />
+                View Details
+            </Link>
+          </Button>
         </div>
       </Card>
     ));

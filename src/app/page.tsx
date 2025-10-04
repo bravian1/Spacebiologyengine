@@ -1,7 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { askQuestion, getStudyDetails as getStudyDetailsAction } from '@/lib/actions';
 import type { ChatMessage, Study, FullStudyDetails } from '@/lib/types';
 import { Header } from '@/components/layout/header';
@@ -19,7 +20,7 @@ const initialMessages: ChatMessage[] = [
   },
 ];
 
-export default function Home() {
+function ChatPage() {
   const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
   const [studies, setStudies] = useState<Study[]>([]);
   const [selectedStudyAccession, setSelectedStudyAccession] = useState<string | null>(null);
@@ -28,6 +29,15 @@ export default function Home() {
   const [isDetailsLoading, setIsDetailsLoading] = useState(false);
 
   const { toast } = useToast();
+
+  const searchParams = useSearchParams();
+  const studyIdFromQuery = searchParams.get('study');
+
+  useEffect(() => {
+    if (studyIdFromQuery) {
+      getStudyDetails(studyIdFromQuery);
+    }
+  }, [studyIdFromQuery]);
 
   const handleSendMessage = async (question: string) => {
     setIsLoading(true);
@@ -67,18 +77,28 @@ export default function Home() {
   };
 
   const getStudyDetails = async (accession: string) => {
-    if (selectedStudyAccession === accession) {
+    if (selectedStudyAccession === accession && studyDetails) {
       setSelectedStudyAccession(null);
       setStudyDetails(null);
       return;
     };
     setIsDetailsLoading(true);
     setSelectedStudyAccession(accession);
-    setStudyDetails(null);
+    setStudyDetails(null); 
     try {
       const result = await getStudyDetailsAction(accession);
       if (result.success && result.data) {
         setStudyDetails(result.data);
+         // If studies array is empty, populate it with the current study
+         if (studies.length === 0) {
+          const minimalStudy: Study = {
+            'Accession': result.data.metadata.identifier,
+            'Study Title': result.data.metadata.studies[0]?.title || 'N/A',
+            'Study Description': result.data.metadata.studies[0]?.description || 'N/A',
+            'Last Modified': result.data.metadata.studies[0]?.publicReleaseDate || new Date().toISOString(),
+          };
+          setStudies([minimalStudy]);
+        }
       } else {
         throw new Error(result.error || 'Failed to fetch study details.');
       }
@@ -127,4 +147,13 @@ export default function Home() {
       </main>
     </div>
   );
+}
+
+
+export default function Home() {
+  return (
+    <React.Suspense fallback={<div>Loading...</div>}>
+      <ChatPage />
+    </React.Suspense>
+  )
 }
