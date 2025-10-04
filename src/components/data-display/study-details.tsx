@@ -1,12 +1,15 @@
 'use client';
 
-import type { FullStudyDetails } from '@/lib/types';
+import type { FullStudyDetails, StudyFile } from '@/lib/types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, BookOpen, FilePieChart, Users, Quote, UserRound } from 'lucide-react';
+import { ArrowLeft, BookOpen, FilePieChart, Users, Quote, UserRound, Download } from 'lucide-react';
 import { FileCategoryChart } from './file-category-chart';
 import { PersonnelChart } from './personnel-chart';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { formatBytes } from '@/lib/utils';
+
 
 interface StudyDetailsProps {
   details: FullStudyDetails;
@@ -56,6 +59,43 @@ export function StudyDetails({ details, onBack }: StudyDetailsProps) {
                 <p className='text-sm text-muted-foreground'>No file data available for this study.</p>
             )}
           </div>
+
+          {files.length > 0 && (
+            <div>
+              <h3 className="flex items-center text-md font-semibold mb-3 font-headline">
+                <Download className="w-5 h-5 mr-2 text-accent" />
+                Downloads
+              </h3>
+              <div className="border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>File Name</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead className="text-right">Size</TableHead>
+                      <TableHead className="w-[100px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {files.map((file: StudyFile) => (
+                      <TableRow key={file.file_name}>
+                        <TableCell className="font-medium truncate max-w-xs" title={file.file_name}>{file.file_name}</TableCell>
+                        <TableCell>{file.category}</TableCell>
+                        <TableCell className="text-right">{formatBytes(file.file_size)}</TableCell>
+                        <TableCell className="text-right">
+                          <Button asChild variant="ghost" size="icon">
+                            <a href={file.remote_url} target="_blank" rel="noopener noreferrer">
+                              <Download className="w-4 h-4" />
+                            </a>
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          )}
 
           {personnel.length > 0 && (
             <div>
