@@ -127,9 +127,11 @@ export default function SearchPage() {
             <p className="text-sm text-muted-foreground line-clamp-2">
               {study['Study Description']}
             </p>
-            <p className="text-xs text-muted-foreground mt-2">
-              Last Modified: {format(new Date(study['Last Modified']), 'PPP')}
-            </p>
+            {study['Last Modified'] && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  Last Modified: {format(new Date(study['Last Modified']), 'PPP')}
+                </p>
+            )}
           </div>
         </div>
       </Card>
