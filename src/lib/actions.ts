@@ -16,13 +16,30 @@ export async function askQuestion(question: string): Promise<{
   try {
     const insightPromise = generateInsight({ question });
 
-    const searchParams = new URLSearchParams({
-      term: question,
-      type: 'cgene',
-      size: '20',
-    });
+    const searchQuery = {
+      size: 20,
+      query: {
+        bool: {
+          must: {
+            query_string: {
+              query: question,
+              default_field: "All_Text_Fields"
+            },
+          },
+        },
+      },
+      sort: [
+          { "Last Modified": { order: "desc" } }
+      ]
+    };
     
-    const searchResponsePromise = fetch(`${NASA_SEARCH_API}?${searchParams.toString()}`);
+    const searchResponsePromise = fetch(NASA_SEARCH_API, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(searchQuery),
+    });
     
     const [insightResult, searchResponse] = await Promise.all([insightPromise, searchResponsePromise]);
 
