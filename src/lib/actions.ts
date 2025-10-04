@@ -7,6 +7,7 @@ import type { FullStudyDetails, Study, StudyFile, StudySearchResult } from '@/li
 const NASA_SEARCH_API = 'https://osdr.nasa.gov/osdr/data/search';
 const NASA_META_API = 'https://osdr.nasa.gov/osdr/data/osd/meta';
 const NASA_FILES_API = 'https://osdr.nasa.gov/osdr/data/osd/files';
+const NASA_BASE_URL = 'https://osdr.nasa.gov';
 
 export async function askQuestion(question: string): Promise<{
   success: boolean;
@@ -33,7 +34,6 @@ export async function askQuestion(question: string): Promise<{
       ]
     };
     
-    // Use GET with query parameter
     const searchUrl = `${NASA_SEARCH_API}?source_content_type=application/json&source=${encodeURIComponent(JSON.stringify(searchQuery))}`;
     
     const searchResponsePromise = fetch(searchUrl, {
@@ -86,7 +86,10 @@ export async function getStudyDetails(accession: string): Promise<{
     ]);
 
     if (metadataResponse?.study?.[accession] && filesResponse?.studies?.[accession]) {
-        const files: StudyFile[] = filesResponse.studies[accession].study_files || [];
+        const files: StudyFile[] = (filesResponse.studies[accession].study_files || []).map((file: any) => ({
+            ...file,
+            remote_url: `${NASA_BASE_URL}${file.remote_url}`
+        }));
     
         return {
           success: true,
@@ -119,7 +122,6 @@ export async function searchStudies(params: {
     const { term, page, pageSize, filters } = params;
     const from = (page - 1) * pageSize;
 
-    // Simple keyword query for now. We can build more complex queries later.
     const query = {
         from: from,
         size: pageSize,
