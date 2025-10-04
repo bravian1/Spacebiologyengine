@@ -134,7 +134,7 @@ export default function SearchPage() {
             )}
           </div>
           <Button asChild variant="secondary" size="sm">
-            <Link href={`/?study=${study.Accession}`}>
+            <Link href={`/chat?study=${study.Accession}`}>
                 <Download className="mr-2 h-4 w-4" />
                 View Details
             </Link>
@@ -150,10 +150,16 @@ export default function SearchPage() {
       <Header>
         <div className="flex items-center gap-4 ml-auto">
             <Button asChild variant="ghost">
-                <Link href="/">Chat</Link>
+                <Link href="/chat">Chat</Link>
             </Button>
             <Button asChild>
                 <Link href="/search">Search</Link>
+            </Button>
+            <Button asChild variant="ghost">
+                <Link href="/about">About</Link>
+            </Button>
+             <Button asChild variant="ghost">
+                <Link href="/">Home</Link>
             </Button>
         </div>
       </Header>
