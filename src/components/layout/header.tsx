@@ -1,5 +1,9 @@
+'use client';
+
 import { LogoIcon } from '@/components/icons/logo-icon';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 export function Header({
     children
@@ -16,5 +20,40 @@ export function Header({
       </Link>
       {children}
     </header>
+  );
+}
+
+export function Navigation() {
+  const pathname = usePathname();
+
+  const navItems = [
+    { href: '/chat', label: 'Chat' },
+    { href: '/search', label: 'Search' },
+    { href: '/about', label: 'About' },
+    { href: '/', label: 'Home' }
+  ];
+
+  return (
+    <div className="flex items-center gap-4 ml-auto">
+      {navItems.map(({ href, label }) => {
+        // Don't show current page button at all
+        if (pathname === href) {
+          return null;
+        }
+
+        const isHomePage = pathname === '/';
+
+        return (
+          <Button
+            key={href}
+            asChild
+            variant="ghost"
+            className={isHomePage ? "hover:bg-primary/20" : ""}
+          >
+            <Link href={href}>{label}</Link>
+          </Button>
+        );
+      })}
+    </div>
   );
 }
