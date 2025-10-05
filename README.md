@@ -154,41 +154,6 @@ The application exposes the following API endpoints:
 - **`/api/genkit`** - Genkit AI integration endpoint for chat functionality
 - Additional API routes may be added as the project evolves
 
-## Deployment
-
-### Firebase App Hosting
-
-The project includes an `apphosting.yaml` configuration file for deployment to Firebase App Hosting.
-
-```bash
-# Deploy to Firebase
-firebase deploy
-```
-
-### Vercel
-
-This Next.js app can also be easily deployed to [Vercel](https://vercel.com/):
-
-1. Push your code to GitHub
-2. Import your repository to Vercel
-3. Add environment variables
-4. Deploy
-
-## Contributing
-
-Contributions are welcome! To contribute:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-Please ensure your code:
-- Passes TypeScript type checking (`npm run typecheck`)
-- Passes linting (`npm run lint`)
-- Follows the existing code style
-- Includes appropriate documentation
 
 ## Acknowledgments
 
