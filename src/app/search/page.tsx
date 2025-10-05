@@ -6,7 +6,7 @@ import { Telescope, FileText, ChevronLeft, ChevronRight, Download } from 'lucide
 
 import { Header, Navigation } from '@/components/layout/header';
 import { SearchBar } from '@/components/search/search-bar';
-import { FilterPanel } from '@/components/search/filter-panel';
+import { FilterPanel, type FilterState } from '@/components/search/filter-panel';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from "@/hooks/use-toast";
@@ -19,7 +19,7 @@ const PAGE_SIZE = 10;
 
 export default function SearchPage() {
   const [searchTerm, setSearchTerm] = React.useState('');
-  const [filters, setFilters] = React.useState({});
+  const [filters, setFilters] = React.useState<FilterState>({ categories: [] });
   const [results, setResults] = React.useState<Study[]>([]);
   const [total, setTotal] = React.useState(0);
   const [currentPage, setCurrentPage] = React.useState(1);
@@ -69,11 +69,11 @@ export default function SearchPage() {
     executeSearch(term, 1);
   };
 
-  const handleFilterChange = (newFilters: any) => {
+  const handleFilterChange = React.useCallback((newFilters: FilterState) => {
     setFilters(newFilters);
     setCurrentPage(1);
     executeSearch(searchTerm, 1);
-  };
+  }, [executeSearch, searchTerm]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -156,6 +156,24 @@ export default function SearchPage() {
         </div>
         <div className="flex flex-col gap-4 overflow-hidden h-full">
             <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+
+            {/* Filter status indicator */}
+            {(filters.categories.length > 0 || filters.yearFrom || filters.yearTo) && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground bg-secondary/30 px-3 py-2 rounded-md">
+                <span>🔍 Filters active:</span>
+                {filters.categories.length > 0 && (
+                  <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                    {filters.categories.length} categor{filters.categories.length === 1 ? 'y' : 'ies'}
+                  </span>
+                )}
+                {(filters.yearFrom || filters.yearTo) && (
+                  <span className="bg-primary/10 text-primary px-2 py-1 rounded text-xs">
+                    Year range
+                  </span>
+                )}
+              </div>
+            )}
+
             <div className="flex-1 space-y-4 overflow-y-auto pr-2">
               {renderResults()}
             </div>
