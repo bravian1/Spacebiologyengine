@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import { Telescope, FileText, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 
-import { Header } from '@/components/layout/header';
+import { Header, Navigation } from '@/components/layout/header';
 import { SearchBar } from '@/components/search/search-bar';
 import { FilterPanel } from '@/components/search/filter-panel';
 import { Button } from '@/components/ui/button';
@@ -148,20 +148,7 @@ export default function SearchPage() {
   return (
     <div className="flex flex-col h-screen bg-background">
       <Header>
-        <div className="flex items-center gap-4 ml-auto">
-            <Button asChild variant="ghost">
-                <Link href="/chat">Chat</Link>
-            </Button>
-            <Button asChild>
-                <Link href="/search">Search</Link>
-            </Button>
-            <Button asChild variant="ghost">
-                <Link href="/about">About</Link>
-            </Button>
-             <Button asChild variant="ghost">
-                <Link href="/">Home</Link>
-            </Button>
-        </div>
+        <Navigation />
       </Header>
       <main className="flex-1 grid md:grid-cols-[280px_1fr] gap-6 p-4 lg:p-6 overflow-hidden">
         <div className="rounded-lg border bg-card text-card-foreground shadow-sm flex flex-col overflow-hidden h-full">
