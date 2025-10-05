@@ -3,6 +3,7 @@
 import { generateInsight } from '@/ai/flows/ai-powered-insights';
 import { summarizeStudyMetadata } from '@/ai/flows/summarize-study-metadata';
 import type { FullStudyDetails, Study, StudyFile, StudySearchResult } from '@/lib/types';
+import type { FilterState } from '@/components/search/filter-panel';
 
 const NASA_SEARCH_API = 'https://osdr.nasa.gov/osdr/data/search';
 const NASA_META_API = 'https://osdr.nasa.gov/osdr/data/osd/meta';
@@ -113,7 +114,7 @@ export async function searchStudies(params: {
     term: string;
     page: number;
     pageSize: number;
-    filters: any; // Using any for now, should be typed
+    filters: FilterState;
 }): Promise<{
     success: boolean,
     data?: { studies: Study[], total: number },
@@ -121,6 +122,44 @@ export async function searchStudies(params: {
 }> {
     const { term, page, pageSize, filters } = params;
     const from = (page - 1) * pageSize;
+
+    console.log('Search filters received:', JSON.stringify(filters, null, 2));
+    console.log('Search term:', term);
+
+    // Build filter array based on provided filters
+    const filterArray: any[] = [];
+
+    // Category filters - search in study description and title for category keywords
+    if (filters.categories && filters.categories.length > 0) {
+        const categoryQuery = filters.categories.map(category =>
+            `("${category}" OR "${category.toLowerCase()}")`
+        ).join(' OR ');
+
+        filterArray.push({
+            query_string: {
+                query: categoryQuery,
+                fields: ["Study Title", "Study Description", "All_Text_Fields"]
+            }
+        });
+    }
+
+    // Year filters - filter by Last Modified date
+    if (filters.yearFrom || filters.yearTo) {
+        const rangeFilter: any = {
+            range: {
+                "Last Modified": {}
+            }
+        };
+
+        if (filters.yearFrom) {
+            rangeFilter.range["Last Modified"].gte = `${filters.yearFrom}-01-01`;
+        }
+        if (filters.yearTo) {
+            rangeFilter.range["Last Modified"].lte = `${filters.yearTo}-12-31`;
+        }
+
+        filterArray.push(rangeFilter);
+    }
 
     const query = {
         from: from,
@@ -132,13 +171,15 @@ export async function searchStudies(params: {
                         query: term || '*',
                     },
                 },
-                // filter: [], // Add filters here in the future
+                ...(filterArray.length > 0 && { filter: filterArray }),
             },
         },
         sort: [
             { "Last Modified": { order: "desc" } }
         ]
     };
+
+    console.log('Final search query:', JSON.stringify(query, null, 2));
 
     try {
         const searchUrl = `${NASA_SEARCH_API}?source_content_type=application/json&source=${encodeURIComponent(JSON.stringify(query))}`;
@@ -159,6 +200,13 @@ export async function searchStudies(params: {
         const result: StudySearchResult = await response.json();
         const studies = result.hits.hits.map(hit => hit._source);
         const total = result.hits.total.value;
+
+        console.log('API Response - Total hits:', total);
+        console.log('API Response - Returned results:', studies.length);
+        if (filters.categories.length > 0) {
+            console.log('Filter applied - Categories:', filters.categories);
+            console.log('Sample result titles:', studies.slice(0, 3).map(s => s['Study Title']));
+        }
 
         return { success: true, data: { studies, total } };
 
