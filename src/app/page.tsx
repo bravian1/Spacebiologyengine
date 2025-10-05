@@ -100,7 +100,7 @@ export default function LandingPage() {
 
       <footer className="border-t border-primary/20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-muted-foreground text-sm">
-            <p>© 2024 AstroBioChat. A project exploring the potential of generative AI with public scientific data.</p>
+            <p>© 2025 AstroBioChat. A project exploring the potential of generative AI with public scientific data.</p>
         </div>
       </footer>
     </div>
