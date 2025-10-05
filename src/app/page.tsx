@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { Header } from '@/components/layout/header';
+import { Header, Navigation } from '@/components/layout/header';
 import { motion } from 'framer-motion';
 import { Rocket, Telescope, BrainCircuit } from 'lucide-react';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
@@ -14,17 +14,7 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background font-body text-foreground">
       <Header>
-        <div className="flex items-center gap-2 ml-auto">
-          <Button asChild variant="ghost" className="hover:bg-primary/20">
-            <Link href="/chat">Chat</Link>
-          </Button>
-          <Button asChild variant="ghost" className="hover:bg-primary/20">
-            <Link href="/search">Search</Link>
-          </Button>
-          <Button asChild variant="ghost" className="hover:bg-primary/20">
-            <Link href="/about">About</Link>
-          </Button>
-        </div>
+        <Navigation />
       </Header>
       
       <main className="flex-1">
