@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Header } from '@/components/layout/header';
+import { Header, Navigation } from '@/components/layout/header';
 import { motion } from 'framer-motion';
 import { Rocket, Dna, Database, BookOpen } from 'lucide-react';
 
@@ -10,20 +10,7 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       <Header>
-        <div className="flex items-center gap-4 ml-auto">
-          <Button asChild variant="ghost">
-            <Link href="/chat">Chat</Link>
-          </Button>
-          <Button asChild variant="ghost">
-            <Link href="/search">Search</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/about">About</Link>
-          </Button>
-          <Button asChild variant="ghost">
-            <Link href="/">Home</Link>
-          </Button>
-        </div>
+        <Navigation />
       </Header>
       <main className="flex-1 py-12 px-4 md:px-6">
         <div className="max-w-4xl mx-auto">
